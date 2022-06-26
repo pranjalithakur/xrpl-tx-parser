@@ -1,0 +1,52 @@
+{
+  "name": "@thebettermint/xrpl-tx-parser",
+  "version": "0.0.1",
+  "description": "Subscribe to an XRPL client and receive parsed transaction objects",
+  "main": "dist/index.js",
+  "repository": "https://github.com/thebettermint/mint-bot.git",
+  "author": "interc0der <intercoder@whirled.io>",
+  "license": "GPL-3.0",
+  "private": true,
+  "scripts": {
+    "jest": "jest",
+    "jest:class": "jest class.test.ts",
+    "jest:obj": "jest obj.test.ts",
+    "c": "tsc",
+    "test:base": "CONFIG_ENV=base node ./scripts/test.js && tsc && jest"
+  },
+  "scriptsComments": {
+    "c": "Compiles typescript",
+    "jest": "Runs test for code within /src with current tsconfig and types",
+    "test": "Runs test compile and unit test for all predefined configuration",
+    "test:all": "Runs test compiles and unit test for all configurations within ./config directory"
+  },
+  "dependencies": {
+    "@thebettermint/tsconfig": "0.0.3",
+    "assert": "^2.0.0",
+    "axios": "^0.27.2",
+    "express": "^4.18.1",
+    "fs": "^0.0.1-security",
+    "lodash": "^4.17.21",
+    "path": "^0.12.7",
+    "xrpl": "^2.3.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^28.1.2",
+    "@types/lodash": "^4.14.182",
+    "@types/node": "^18.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.29.0",
+    "@typescript-eslint/parser": "^5.29.0",
+    "eslint": "^8.2.0",
+    "eslint-config-airbnb-base": "15.0.0",
+    "eslint-config-node": "^4.1.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "jest": "^28.1.1",
+    "prettier": "^2.7.1",
+    "ts-jest": "^28.0.5",
+    "ts-node": "^10.8.1",
+    "typescript": "^4.7.4"
+  }
+}
