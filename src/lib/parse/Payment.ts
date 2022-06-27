@@ -1,7 +1,7 @@
 import { allPayments } from './allPayments';
 import { TransactionStream } from 'xrpl';
 
-const Payment = (tx: TransactionStream) => {
+export const Payment = (tx: TransactionStream) => {
   const payments = allPayments(tx);
 
   if (Array.isArray(payments) && payments.length > 0) {
@@ -12,5 +12,3 @@ const Payment = (tx: TransactionStream) => {
 
   return;
 };
-
-export { Payment };

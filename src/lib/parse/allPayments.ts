@@ -2,7 +2,7 @@ import { TransactionStream, dropsToXrp } from 'xrpl';
 import { BigNumber } from 'bignumber.js';
 import helpers from '../helpers';
 
-import { PaymentInterface } from '../../../types/parser';
+import { PaymentInterface } from '../../../types/parser/payment';
 
 var allPayments = function (tx: TransactionStream) {
   var payment: PaymentInterface = {
