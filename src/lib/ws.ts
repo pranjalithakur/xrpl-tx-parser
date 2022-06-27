@@ -159,7 +159,7 @@ class xrplTxParser extends EventEmitter {
    * Captured emitted event on close message
    */
   private _onClose(event: number): void {
-    this.emit(wsStatusMessages.closed, event);
+    if (this.reconnect === 0) this.emit(wsStatusMessages.closed, event);
   }
 }
 
