@@ -91,10 +91,16 @@ class xrplTxParser extends EventEmitter {
 
     if (this.reconnect && this.reconnect > 0) {
       if (this.url instanceof Array) {
-        this._connect(this.url[this.urlPosition + 1]);
-        this.urlPosition < this.url.length - 1 ? this.urlPosition++ : 0;
+        this.urlPosition < this.url.length - 1
+          ? this.urlPosition++
+          : (this.urlPosition = 0);
+        this._connect(this.url[this.urlPosition]);
+        this.emit(wsStatusMessages.reconnect, this.url[this.urlPosition]);
       }
-      if (typeof this.url === 'string') this._connect(this.url);
+      if (typeof this.url === 'string') {
+        this._connect(this.url);
+        this.emit(wsStatusMessages.reconnect, this.url);
+      }
       --this.reconnect;
     }
   };
