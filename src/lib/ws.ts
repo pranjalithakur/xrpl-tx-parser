@@ -56,7 +56,7 @@ class xrplTxParser extends EventEmitter {
    */
   private _startTimeout = async (): Promise<any> => {
     this.timeoutId = setTimeout(() => {
-      this.emit('timeout');
+      this.emit(wsStatusMessages.timeout);
       this.disconnect();
     }, this.timeout);
   };
