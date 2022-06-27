@@ -1,8 +1,10 @@
 import xrplTxParser from '../src/lib/ws';
 import {
   wsStatusMessages,
-  mainServerURL,
-  serverURL,
+  DEFAULT_MAINNET,
+  DEFAULT_DEVNET,
+  DEFAULT_TESTNET,
+  DEFAULT_NFTDEV,
 } from '../src/lib/constants';
 
 describe('parse-client', () => {
@@ -115,11 +117,7 @@ describe('parse-client', () => {
 
   test('reconnect', async () => {
     let test = new xrplTxParser({
-      url: [
-        'wss://xls20-sandbox.rippletest.net:51233',
-        serverURL,
-        mainServerURL,
-      ],
+      url: [DEFAULT_NFTDEV, DEFAULT_DEVNET, DEFAULT_MAINNET, DEFAULT_TESTNET],
       registry: ['rMfCZhBfR4tRunHaE9jrtdsjF5stuuQ9JB'],
       timeout: 300,
       reconnect: 10,
@@ -153,9 +151,10 @@ describe('parse-client', () => {
   test('url-array', async () => {
     let reconnectCount = 10;
     let serverArray = [
-      'wss://xls20-sandbox.rippletest.net:51233',
-      serverURL,
-      mainServerURL,
+      DEFAULT_NFTDEV,
+      DEFAULT_DEVNET,
+      DEFAULT_MAINNET,
+      DEFAULT_TESTNET,
     ];
 
     let internalCount: number = 0,
