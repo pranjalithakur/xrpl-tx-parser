@@ -1,3 +1,5 @@
-import xrplSubscriptionToRegistryWS from './lib/ws';
+import xrplTxParser from './lib/ws';
+import * as constants from './lib/constants';
 
-export default xrplSubscriptionToRegistryWS;
+export { constants };
+export default xrplTxParser;
