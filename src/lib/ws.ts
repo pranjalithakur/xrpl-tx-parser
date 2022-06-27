@@ -1,5 +1,5 @@
 import { Client, LedgerStream, TransactionStream } from 'xrpl';
-import { wsStatusMessages, mainServerURL } from './constants';
+import { wsStatusMessages, DEFAULT_MAINNET } from './constants';
 import parse from '../lib/parse';
 import EventEmitter from 'events';
 
@@ -38,7 +38,7 @@ class xrplTxParser extends EventEmitter {
   }) {
     super();
     this.registry = registry || [];
-    this.url = url || mainServerURL;
+    this.url = url || DEFAULT_MAINNET;
     this.urlPosition = 0;
     this.test = test || false;
     this.reconnect = reconnect || 0;
