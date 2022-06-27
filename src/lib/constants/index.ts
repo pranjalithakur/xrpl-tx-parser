@@ -5,6 +5,8 @@ export const wsStatusMessages = {
   connected:
     wsPreamble + 'The websocket has been successfully connected upon request',
   closed: wsPreamble + 'The websocket has been successfully closed',
+  reconnect: wsPreamble + 'Attempting to reconnect',
+  timeout: wsPreamble + 'Your connection has timeout',
   error: wsPreamble + 'The websocket has received an error',
   tx: wsPreamble + 'The websocket has received a transaction event',
   lgr: wsPreamble + 'The websocket has received a ledger close event',
