@@ -1,39 +1,73 @@
 import { Client, LedgerStream, TransactionStream } from 'xrpl';
-import { wsStatusMessages } from './constants';
+import { wsStatusMessages, mainServerURL } from './constants';
 import parse from '../lib/parse';
+import EventEmitter from 'events';
+
 /**
  * xrplSubscriptionToRegistryWS
  * Class for listening to a registry of addresses
  */
-class xrplSubscriptionToRegistryWS {
+class xrplTxParser extends EventEmitter {
   [index: string]: any;
   registry: (string | undefined)[] | undefined;
-  registryAccounts: string[] | undefined;
-  url: string | any;
+  url: string | string[];
+  urlPosition: number;
   ws: Client | undefined;
   test?: boolean | undefined;
+  timeout?: number | undefined;
+  timeoutId?: any;
+  reconnect?: number;
 
   /**
    * Open a subsription stream with XRPLjs.
-   * @param {string} url - The url to the server.
-   * @param {string[]} registry - The subsription registry: List of XRPL addresses.
+   * @param {string| string[]} url - The url to the server.
+   * @param { string[] } registry - The subsription registry: List of XRPL addresses.
    */
   constructor({
     url,
     registry,
     test,
+    reconnect,
+    timeout,
   }: {
-    url: string;
-    registry: (string | undefined)[] | undefined;
+    url?: string | string[] | undefined;
+    registry?: (string | undefined)[] | undefined;
     test?: boolean;
+    reconnect?: number;
+    timeout?: number | undefined;
   }) {
-    this.registry = registry;
-    this.url = url;
-    this.test = test || undefined;
+    super();
+    this.registry = registry || [];
+    this.url = url || mainServerURL;
+    this.urlPosition = 0;
+    this.test = test || false;
+    this.reconnect = reconnect || 0;
+    this.timeout = timeout || undefined;
     this.ws = undefined;
-    this.registryAccounts = undefined;
-    this._connect(url);
+    this.timeoutId;
+    if (this.url instanceof Array && this.url.length > 0)
+      this._connect(this.url[this.urlPosition]);
+    if (typeof this.url === 'string') this._connect(this.url);
+    if (this.timeout) this._startTimeout();
   }
+
+  /**
+   * Start timeout if defined
+   */
+  private _startTimeout = async (): Promise<any> => {
+    this.timeoutId = setTimeout(() => {
+      this.emit('timeout');
+      this.disconnect();
+    }, this.timeout);
+  };
+
+  /**
+   * Reset timeout on every emitted event
+   */
+  private _resetTimeout = async (): Promise<any> => {
+    clearTimeout(this.timeoutId);
+    this._startTimeout();
+  };
 
   /**
    * Connect to client and initalize listeners
@@ -54,6 +88,15 @@ class xrplSubscriptionToRegistryWS {
    */
   public disconnect = (): void => {
     this.ws?.disconnect();
+
+    if (this.reconnect && this.reconnect > 0) {
+      if (this.url instanceof Array) {
+        this._connect(this.url[this.urlPosition + 1]);
+        this.urlPosition < this.url.length - 1 ? this.urlPosition++ : 0;
+      }
+      if (typeof this.url === 'string') this._connect(this.url);
+      --this.reconnect;
+    }
   };
 
   /**
@@ -61,8 +104,8 @@ class xrplSubscriptionToRegistryWS {
    *  Proceeds to subscribe to registry
    */
   private _onConnected(): void {
-    if (this.test) this.ws?.emit(wsStatusMessages.connected);
-    console.log(this.registry);
+    if (this.timeout) this._resetTimeout();
+    this.emit(wsStatusMessages.connected);
     this.ws?.request({
       command: 'subscribe',
       streams: ['transactions', 'ledger'],
@@ -72,36 +115,46 @@ class xrplSubscriptionToRegistryWS {
   /**
    * Captured emitted event on transaction message
    */
-  private _onTx(event: any): void {
-    if (this.test) {
-      let handled: any = parse.txHandler(event);
-      let parsed = parse.allPayments(handled);
-      this.ws?.emit(wsStatusMessages.tx, event);
+  private _onTx(event: any): any {
+    let handled: any = parse.txHandler(event);
+    let parsed = parse.allPayments(handled);
+
+    if (this.registry?.length === 0 && parsed) {
+      if (this.timeout) this._resetTimeout();
+      return this.emit(wsStatusMessages.tx, parsed);
     }
+
+    if (
+      !parsed?.destination ||
+      this.registry?.indexOf(parsed?.destination) === -1
+    )
+      return;
+
+    if (this.timeout) this._resetTimeout();
+    this.emit(wsStatusMessages.tx, parsed);
   }
 
   /**
    * Captured emitted event on ledger message
    */
   private _onLgr(event: any): void {
-    if (this.test) this.ws?.emit(wsStatusMessages.lgr, event);
+    this.emit(wsStatusMessages.lgr, event);
   }
 
   /**
    * Captured emitted event on error message
    */
   private _onError(event: any[]): void {
-    if (this.test) this.ws?.emit(wsStatusMessages.error, event);
-    console.log(event);
-    this.ws?.disconnect();
+    this.emit(wsStatusMessages.error, event);
+    this.disconnect();
   }
 
   /**
    * Captured emitted event on close message
    */
   private _onClose(event: number): void {
-    if (this.test) this.ws?.emit(wsStatusMessages.closed, event);
+    this.emit(wsStatusMessages.closed, event);
   }
 }
 
-export default xrplSubscriptionToRegistryWS;
+export default xrplTxParser;
