@@ -12,8 +12,12 @@
   "license": "GPL-3.0",
   "scripts": {
     "jest": "jest",
-    "jest:class": "jest class.test.ts",
-    "jest:obj": "jest obj.test.ts",
+    "jest:open-close": "jest -t 'parse-client opening-closing'",
+    "jest:ledger-closes": "jest -t 'parse-client ledger-closes'",
+    "jest:tx": "jest -t 'parse-client tx'",
+    "jest:timeout": "jest -t 'parse-client timeout'",
+    "jest:reconnect": "jest -t 'parse-client reconnect'",
+    "jest:url": "jest -t 'parse-client url-array'",
     "c": "tsc",
     "test:base": "CONFIG_ENV=base node ./scripts/test.js && tsc && jest"
   },
