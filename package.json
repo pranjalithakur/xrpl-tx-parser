@@ -1,12 +1,11 @@
 {
   "name": "@thebettermint/xrpl-tx-parser",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Subscribe to an XRPL client and receive parsed transaction objects",
   "main": "dist/index.js",
   "repository": "https://github.com/thebettermint/mint-bot.git",
   "author": "interc0der <intercoder@whirled.io>",
   "license": "GPL-3.0",
-  "private": true,
   "scripts": {
     "jest": "jest",
     "jest:class": "jest class.test.ts",
