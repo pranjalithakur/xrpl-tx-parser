@@ -24,8 +24,12 @@
   "scriptsComments": {
     "c": "Compiles typescript",
     "jest": "Runs test for code within /src with current tsconfig and types",
-    "test": "Runs test compile and unit test for all predefined configuration",
-    "test:all": "Runs test compiles and unit test for all configurations within ./config directory"
+    "jest:open-close": "Runs single test to check the opening and closing of the client",
+    "jest:ledger-closes": "Runs single test to listen for ledger close events",
+    "jest:tx": "Runs single test to listen for emitted transactions events",
+    "jest:timeout": "Runs single test to verify timeout is working as expected",
+    "jest:reconnect": "Runs single test for reconnect functionality",
+    "jest:url": "Runs single test for url rotation on reconnect"
   },
   "dependencies": {
     "@thebettermint/tsconfig": "0.0.3",
