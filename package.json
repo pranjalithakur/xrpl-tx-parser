@@ -3,7 +3,7 @@
   "version": "0.0.2",
   "description": "Subscribe to an XRPL client and receive parsed transaction objects",
   "main": "dist/index.js",
-  "repository": "https://github.com/thebettermint/mint-bot.git",
+  "repository": "https://github.com/thebettermint/xrpl-tx-parser.git",
   "author": "interc0der <intercoder@whirled.io>",
   "license": "GPL-3.0",
   "scripts": {
