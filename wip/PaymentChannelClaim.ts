@@ -1,4 +1,4 @@
-import { allPaymentChannels } from './allPayChans';
+import { allPaymentChannels } from '../src/lib/parse/allPayChans';
 import { TransactionStream } from 'xrpl';
 
 export const PaymentChannelClaim = (tx: TransactionStream) => {

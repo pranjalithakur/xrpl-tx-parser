@@ -1,12 +1,11 @@
-/* import { OfferPartialFills } from './OfferPartialFills';
+import { OfferPartialFills } from './OfferPartialFills';
 import { OfferAllFills } from './OfferAllFills';
 import { OfferFilled } from './OfferFilled';
 import { OfferCreates } from './OfferCreates';
-import { OfferCancels } from './OfferCancels'; */
+import { OfferCancels } from './OfferCancels';
 
 import { Payment } from './Payment';
-import { allPayments } from './allPayments';
-/* import { PaymentChannelClaim } from '../../../wip/PaymentChannelClaim';
+import { PaymentChannelClaim } from '../../../wip/PaymentChannelClaim';
 import { PaymentChannelCreate } from './PaymentChannelCreate';
 import { PaymentChannelFund } from './PaymentChannelFund';
 
@@ -18,6 +17,7 @@ import { SetRegularKey } from './SetRegularKey';
 import { AccountDelete } from './AccountDelete';
 import { AccountSet } from './AccountSet';
 
+import { allPayments } from './allPayments';
 import { allChecks } from './allChecks';
 import { allEscrows } from './allEscrows';
 import { allExchanges } from './allExchanges';
@@ -25,7 +25,7 @@ import { allMemos } from './allMemos';
 import { allOffers } from './allOffers';
 import { allAffectedAccounts } from './allAffectedAccounts';
 import { allBalanceChanges } from './allBalanceChanges';
-import { allPaymentChannels } from './allPayChans'; */
+import { allPaymentChannels } from './allPayChans';
 
 import { TxParserInterface } from '../../../types/common';
 
@@ -40,7 +40,7 @@ export default {
   txHandler,
 
   allPayments,
-  /*   allChecks,
+  allChecks,
   allEscrows,
   allExchanges,
   allMemos,
@@ -53,14 +53,14 @@ export default {
   OfferAllFills,
   OfferFilled,
   OfferCreates,
-  OfferCancels, */
+  OfferCancels,
   Payment,
-  /*   PaymentChannelClaim,
+  PaymentChannelClaim,
   PaymentChannelCreate,
   PaymentChannelFund,
   TrustSet,
   TicketCreate,
   SetRegularKey,
   AccountDelete,
-  AccountSet, */
+  AccountSet,
 };
