@@ -130,14 +130,16 @@ class xrplTxParser extends EventEmitter {
       return this.emit(wsStatusMessages.tx, parsed);
     }
 
-    if (
-      !parsed?.destination ||
-      this.registry?.indexOf(parsed?.destination) === -1
-    )
-      return;
-
-    if (this.timeout) this._resetTimeout();
-    this.emit(wsStatusMessages.tx, parsed);
+    if (this.registry && parsed?.destination && parsed.source) {
+      if (
+        this.registry.indexOf(parsed.destination) > -1 ||
+        this.registry.indexOf(parsed.source) > -1
+      ) {
+        if (this.timeout) this._resetTimeout();
+        this.emit(wsStatusMessages.tx, parsed);
+      }
+    }
+    return;
   }
 
   /**
