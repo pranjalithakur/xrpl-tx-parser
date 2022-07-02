@@ -30,26 +30,34 @@ class xrplTxParser extends EventEmitter {
     test,
     reconnect,
     timeout,
+    connectionTimeout,
   }: {
     url?: string | string[] | undefined;
     registry?: (string | undefined)[] | undefined;
     test?: boolean;
-    reconnect?: number;
+    reconnect?: number | boolean;
     timeout?: number | undefined;
+    connectionTimeout?: number | undefined;
   }) {
     super();
     this.registry = registry || [];
     this.url = url || DEFAULT_MAINNET;
     this.urlPosition = 0;
     this.test = test || false;
-    this.reconnect = reconnect || 0;
+    this.reconnect = reconnect || undefined;
     this.timeout = timeout || undefined;
+    this.connectionTimeout = connectionTimeout || undefined;
     this.ws = undefined;
     this.timeoutId;
     if (this.url instanceof Array && this.url.length > 0)
       this._connect(this.url[this.urlPosition]);
     if (typeof this.url === 'string') this._connect(this.url);
     if (this.timeout) this._startTimeout();
+    this._ping();
+    this.addListener('pong', () => {
+      if (this.test) console.log('pong');
+      if (this.timeout) this._resetTimeout;
+    });
   }
 
   /**
