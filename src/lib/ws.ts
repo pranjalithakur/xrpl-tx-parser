@@ -16,7 +16,8 @@ class xrplTxParser extends EventEmitter {
   test?: boolean | undefined;
   timeout?: number | undefined;
   timeoutId?: any;
-  reconnect?: number;
+  reconnect?: number | boolean;
+  connectionTimeout?: number | undefined;
 
   /**
    * Open a subsription stream with XRPLjs.
