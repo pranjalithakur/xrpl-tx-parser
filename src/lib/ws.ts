@@ -118,6 +118,7 @@ class xrplTxParser extends EventEmitter {
   private _onConnected(): void {
     if (this.timeout) this._resetTimeout();
     this.emit(wsStatusMessages.connected);
+    if (this.test) console.log('sending request to client');
     this.ws?.request({
       command: 'subscribe',
       streams: ['transactions', 'ledger'],
@@ -128,8 +129,11 @@ class xrplTxParser extends EventEmitter {
    * Captured emitted event on transaction message
    */
   private _onTx(event: any): any {
+    if (this.test) console.log('received tx', event);
+
     let handled: any = parse.txHandler(event);
     let parsed = parse.allPayments(handled);
+    if (this.test) console.log('parsed tx', parsed);
 
     if (this.registry?.length === 0 && parsed) {
       if (this.timeout) this._resetTimeout();
