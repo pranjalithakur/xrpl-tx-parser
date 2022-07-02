@@ -74,8 +74,16 @@ class xrplTxParser extends EventEmitter {
    * Reset timeout on every emitted event
    */
   private _resetTimeout = async (): Promise<any> => {
+    if (this.test) console.log('resetting timeout');
     clearTimeout(this.timeoutId);
     this._startTimeout();
+  };
+
+  private _ping = async (): Promise<any> => {
+    setTimeout(() => {
+      this.emit('ping');
+      this._ping();
+    }, this.timeout || 5000);
   };
 
   /**
@@ -83,7 +91,10 @@ class xrplTxParser extends EventEmitter {
    * @param {string} url - The url to the server.
    */
   private _connect = async (url: string): Promise<any> => {
-    this.ws = new Client(url);
+    this.ws = new Client(url, {
+      timeout: this.timeout || 60000,
+      connectionTimeout: this.connectionTimeout || 10000,
+    });
     this.ws.connect();
     this.ws.once('connected', () => this._onConnected());
     this.ws.on('transaction', (evt: TransactionStream) => this._onTx(evt));
@@ -96,22 +107,8 @@ class xrplTxParser extends EventEmitter {
    * Forceful disconnect from client
    */
   public disconnect = (): void => {
+    if (this.test) console.log('forceful disconnect');
     this.ws?.disconnect();
-
-    if (this.reconnect && this.reconnect > 0) {
-      if (this.url instanceof Array) {
-        this.urlPosition < this.url.length - 1
-          ? this.urlPosition++
-          : (this.urlPosition = 0);
-        this._connect(this.url[this.urlPosition]);
-        this.emit(wsStatusMessages.reconnect, this.url[this.urlPosition]);
-      }
-      if (typeof this.url === 'string') {
-        this._connect(this.url);
-        this.emit(wsStatusMessages.reconnect, this.url);
-      }
-      --this.reconnect;
-    }
   };
 
   /**
