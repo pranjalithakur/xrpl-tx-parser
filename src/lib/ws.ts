@@ -146,32 +146,62 @@ class xrplTxParser extends EventEmitter {
         this.registry.indexOf(parsed.source) > -1
       ) {
         if (this.timeout) this._resetTimeout();
-        this.emit(wsStatusMessages.tx, parsed);
+        return this.emit(wsStatusMessages.tx, parsed);
       }
     }
+
+    if (this.test) console.log('parsed tx did not match registry accounts');
     return;
   }
 
   /**
    * Captured emitted event on ledger message
    */
-  private _onLgr(event: any): void {
-    this.emit(wsStatusMessages.lgr, event);
+  private _onLgr(event: any): any {
+    if (this.test) console.log('received lgr', event);
+    return this.emit(wsStatusMessages.lgr, event);
   }
 
   /**
    * Captured emitted event on error message
    */
   private _onError(event: any[]): void {
+    if (this.test) console.log('error', event);
     this.emit(wsStatusMessages.error, event);
-    this.disconnect();
+    return this.disconnect();
   }
 
   /**
    * Captured emitted event on close message
    */
   private _onClose(event: number): void {
-    if (this.reconnect === 0) this.emit(wsStatusMessages.closed, event);
+    // If reconnect count is equal to zero or undefined, emit disconnect and stop
+    if (this.reconnect === 0 || !this.reconnect)
+      this.emit(wsStatusMessages.closed, event);
+
+    // If reconnect true and reconnect create than 0, reconnect
+    if (this.reconnect && this.reconnect > 0) {
+      if (this.test) console.log('attempting the reconnect');
+      // If urls is an array, attemp to connect to the next item in the array
+      if (this.url instanceof Array) {
+        this.urlPosition < this.url.length - 1
+          ? this.urlPosition++
+          : (this.urlPosition = 0);
+        this._connect(this.url[this.urlPosition]);
+        this.emit(wsStatusMessages.reconnect, this.url[this.urlPosition]);
+      }
+
+      // If url is a string, attemp to reconnect to the same server
+      if (typeof this.url === 'string') {
+        this._connect(this.url);
+        this.emit(wsStatusMessages.reconnect, this.url);
+      }
+      // Decrement the reconnect count
+      if (typeof this.reconnect === 'number') --this.reconnect;
+      if (this.test) console.log('reconnect count: ', this.reconnect);
+    }
+
+    return;
   }
 }
 
