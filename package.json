@@ -39,7 +39,7 @@
     "fs": "^0.0.1-security",
     "lodash": "^4.17.21",
     "path": "^0.12.7",
-    "xrpl": "^2.3.0"
+    "xrpl": "4.2.4"
   },
   "devDependencies": {
     "@types/jest": "^28.1.2",
